@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.16.5.139:8848
+        namespace: ab989c05-5487-4211-bec4-e8e6cd28b740
+        file-extension: yaml
+      discovery:
+        server-addr: ${spring.cloud.nacos.config.server-addr}
+        namespace: ${spring.cloud.nacos.config.namespace}
+  redis:
+    host: 172.16.5.5
+    port: 6385
+    database: 0
+    timeout: 1000
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.alibaba.nacos.client.**: error

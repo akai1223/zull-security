@@ -1,0 +1,12 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /backend-api
+spring:
+  application:
+    name: backend-api
+  profiles:
+    active: local
+logging:
+  file:
+    path: logs
