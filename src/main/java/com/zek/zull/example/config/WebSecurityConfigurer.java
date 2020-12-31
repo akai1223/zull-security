@@ -9,12 +9,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 /**
@@ -34,7 +34,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
@@ -45,10 +44,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 跨域预检请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/login/**").permitAll()
                 //指定需要拦截的uri
-                .antMatchers("/api-user/web/**").authenticated()
-                ///其他请求都可以访问
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and().exceptionHandling()
                 //身份访问异常
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -64,7 +62,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 
         //使用自己的前置拦截器
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(jwtAuthenticationTokenFilter);
+
+        // 防止iframe 造成跨域
+        http.headers().frameOptions().disable();
     }
 
     @Bean
@@ -86,6 +87,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserService());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/favicon.ico");
     }
 
     @Bean

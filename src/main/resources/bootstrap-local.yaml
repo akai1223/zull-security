@@ -18,3 +18,5 @@ logging:
   config: classpath:logback-spring.xml
   level:
     com.alibaba.nacos.client.**: error
+zuul:
+  routes:

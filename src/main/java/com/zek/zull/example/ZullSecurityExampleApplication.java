@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @date 2020/12/30 16:04
  */
 @Slf4j
+@EnableZuulProxy
 @EnableDiscoveryClient
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @MapperScan(basePackages = {"com.zek.**.mapper"})

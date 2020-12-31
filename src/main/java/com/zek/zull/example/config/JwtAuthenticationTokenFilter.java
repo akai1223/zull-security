@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -48,7 +47,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 if (jwtTokenUtil.validateToken(token, userDetails)) {
                     // 将用户信息存入 authentication，方便后续校验
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     // 将 authentication 存入 ThreadLocal，方便后续获取用户信息
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
